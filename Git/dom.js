@@ -21,33 +21,33 @@ console.log(headerTitle.innerText);
 headerTitle.innerHTML = '<h3>Hello</h3>';
 headerTitle.style.borderBottom = 'solid 3px #000';
 
-var items = document.getElementsByClassName('list-group-item');
-console.log(items);
-console.log(items[1]);
-items[2].textContent = 'Hello 2';
-items[2].style.fontWeight = 'bold';
-items[2].style.backgroundColor = 'green';
-
-//items.style.backgroundColor = '#f4f4f4';
-
-for(var i = 0; i < items.length;i++)
-{
-    items[i].style.fontWeight = 'bold';
-}
-
-// var li = document.getElementsByClassName('list-group-item');
-// console.log(li);
-// console.log(li[1]);
-// li[1].textContent = 'Hello 2';
-// li[1].style.fontWeight = 'bold';
-// li[1].style.backgroundColor = 'green';
+// var items = document.getElementsByClassName('list-group-item');
+// console.log(items);
+// console.log(items[1]);
+// items[2].textContent = 'Hello 2';
+// items[2].style.fontWeight = 'bold';
+// items[2].style.backgroundColor = 'green';
 
 // //items.style.backgroundColor = '#f4f4f4';
 
-// for(var i = 0; i < li.length;i++)
+// for(var i = 0; i < items.length;i++)
 // {
-//     li[i].style.backgroundColor = '#f4f4f4';
+//     items[i].style.fontWeight = 'bold';
 // }
+
+var li = document.getElementsByClassName('list-group-item');
+console.log(li);
+console.log(li[1]);
+li[2].textContent = 'Hello 2';
+li[2].style.fontWeight = 'bold';
+li[2].style.backgroundColor = 'green';
+
+//items.style.backgroundColor = '#f4f4f4';
+
+for(var i = 0; i < li.length;i++)
+{
+    li[i].style.fontWeight = 'bold';
+}
 
 // var header  = document.querySelector('#min-header');
 // header.getElementsByClassName.borderbotto = 'solid 4px #ccc';
