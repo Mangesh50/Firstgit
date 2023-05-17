@@ -35,12 +35,12 @@ headerTitle.style.borderBottom = 'solid 3px #000';
 //     items[i].style.fontWeight = 'bold';
 // }
 
-var li = document.getElementsByClassName('list-group-item');
+var li = document.getElementsByTagName('li');
 console.log(li);
 console.log(li[1]);
-li[2].textContent = 'Hello 2';
-li[2].style.fontWeight = 'bold';
-li[2].style.backgroundColor = 'green';
+li[1].textContent = 'Hello 2';
+li[1].style.fontWeight = 'bold';
+li[1].style.backgroundColor = 'green';
 
 //items.style.backgroundColor = '#f4f4f4';
 
@@ -48,8 +48,8 @@ for(var i = 0; i < li.length;i++)
 {
     li[i].style.fontWeight = 'bold';
 }
-
-// var header  = document.querySelector('#min-header');
+//Query Selector //
+// var header  = document.querySelector('#main-header');
 // header.getElementsByClassName.borderbotto = 'solid 4px #ccc';
 
 // var input = document.querySelector('input');
