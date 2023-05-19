@@ -39,12 +39,11 @@
     form.addEventListener("submit", function(event) {
         event.preventDefault();
 
-  // Get the user details from the input fields
   const name = document.getElementById("name").value;
   const email = document.getElementById("email").value;
   const phonenumber = document.getElementById("phone number").value;
 
-  // Create a new user object
+  // Create a new user
   const user = {
     name: name,
     email: email,
