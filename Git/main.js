@@ -80,3 +80,7 @@ function filterItems(e)
         }
     });
 }
+
+//local Storage
+localStorage.setItem('username','Mahesh')
+localStorage.getItem('username')
