@@ -26,28 +26,27 @@
 
       <ul id="users"></ul>
 
-      <!-- <ul class="items">
-        <li class="item">Item 1</li>
-        <li class="item">Item 2</li>
-        <li class="item">Item 3</li>
-      </ul> -->
+      <ul class="items">
+        <!-- <li class="item">name</li>
+        <li class="item">email</li>
+        <li class="item">phone number</li> -->
+      </ul>
     </section>
 
     <script>
-    const form = document.getElementById("form");
-    
-    form.addEventListener("submit", function(event) {
+      const form = document.getElementById("form");
+      form.addEventListener("submit", function (event) {
         event.preventDefault();
-
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
-  const phonenumber = document.getElementById("phone number").value;
+        
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const phoneNumber = document.getElementById("phone number").value;
 
   // Create a new user
   const user = {
     name: name,
     email: email,
-    phonenumber: phonenumber
+    phoneNumber: phoneNumber,
   };
 
   const newUsers = JSON.parse(localStorage.getItem("users")) || [];
@@ -57,7 +56,44 @@
   localStorage.setItem("users", JSON.stringify(newUsers));
 
   form.reset();
+
+  displayUsers();
 });
-    </script>
-  </body>
+
+function deleteUser(index) {
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+
+  users.splice(index, 1);
+
+  localStorage.setItem("users", JSON.stringify(users));
+
+  displayUsers();
+}
+
+function displayUsers() {
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  const userList = document.getElementById("users");
+
+  userList.innerHTML = "";
+
+  users.forEach((user, index) => {
+    const listItem = document.createElement("li");
+    listItem.textContent = `Name: ${user.name}, Email: ${user.email}, Phone Number: ${user.phoneNumber}`;
+
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
+    deleteButton.classList.add("btn", "btn-sm", "float-right");
+
+    deleteButton.addEventListener("click", function () {
+      deleteUser(index);
+    });
+
+    listItem.appendChild(deleteButton);
+    userList.appendChild(listItem);
+  });
+}
+
+displayUsers();
+</script>
+</body>
 </html>
