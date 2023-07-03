@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <title></title>
+  </head>
+  <body>
+    <section class="container">
+      <form id="form">
+        <div>
+          <label for="expenseamount">Choose expense amount:</label>
+          <input type="number" id="expenseamount" name="expenseamount" min="1" max="10000">
+
+          <label for="description">Choose description:</label>
+          <input type="text" id="description">
+
+            <label for="category">Choose a category:</label>
+            <select name="category" id="category">
+                <option value="movie">Movie</option>
+                <option value="fuel">Fuel</option>
+                <option value="electricity">Electricity</option>
+                <option value="food">Food</option>
+            </select>
+        <input class="btn" type="submit" value="Add Expense">
+        </div>
+      </form>
+
+      <ul id="users"></ul>
+
+      <ul class="items">
+        <!-- <li class="item">expenseamount</li>
+        <li class="item">description</li>
+        <li class="item">category</li> -->
+      </ul>
+    </section>
+
+    <script>
+      const form = document.getElementById("form");
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        
+        const expenseamount = document.getElementById("expenseamount").value;
+        const description = document.getElementById("description").value;
+        const category = document.getElementById("category").value;
+
+  // Create a new user
+  const user = {
+    expenseamount: expenseamount,
+    description: description,
+    category: category,
+  };
+
+  const newUsers = JSON.parse(localStorage.getItem("users")) || [];
+
+  newUsers.push(user);
+
+  localStorage.setItem("users", JSON.stringify(newUsers));
+
+  form.reset();
+
+  displayUsers();
+});
+
+function deleteUser(index) {
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+
+  users.splice(index, 1);
+
+  localStorage.setItem("users", JSON.stringify(users));
+
+  displayUsers();
+}
+
+function editUser(index) {
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+
+  const user = users[index];
+
+  // Set the form values to the user's information for editing
+  document.getElementById("expenseamount").value = user.expenseamount;
+  document.getElementById("description").value = user.description;
+  document.getElementById("category").value = user.category;
+
+  // Remove the user from the list
+  users.splice(index, 1);
+
+  localStorage.setItem("users", JSON.stringify(users));
+
+  displayUsers();
+}
+
+function displayUsers() {
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  const userList = document.getElementById("users");
+
+  userList.innerHTML = "";
+
+  users.forEach((user, index) => {
+    const listItem = document.createElement("li");
+    listItem.textContent = `${user.expenseamount}-${user.category}-${user.description}`;
+
+    const editButton = document.createElement("button");
+    editButton.textContent = "Edit Expense";
+    editButton.classList.add("btn", "btn-sm", "float-center", "mr-1");
+
+    editButton.addEventListener("click", function () {
+      editUser(index);
+    });
+
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete Expense";
+    deleteButton.classList.add("btn", "btn-sm", "float-center");
+
+    deleteButton.addEventListener("click", function () {
+      deleteUser(index);
+    });
+
+    listItem.appendChild(editButton);
+    listItem.appendChild(deleteButton);
+    userList.appendChild(listItem);
+  });
+}
+
+displayUsers();
+
+</script>
+</body>
+</html>
