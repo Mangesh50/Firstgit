@@ -1,7 +1,40 @@
+console.log('person1: shows ticket');
+console.log('person2: shows ticket');
+
+const preMovie = async () => {
+    const PromiseWifeBringingTicks = new Promise((resolve, reject) => {
+        setTimeout(() => resolve('ticket'), 3000);
+    });
+
+    const getPopcorn = new Promise((resolve, reject) => resolve('popcorn'));
+
+    const getButter = new Promise((resolve, reject) => resolve('butter'));
+
+    const getColdDrinks = new Promise((resolve, reject) => resolve('colddrinks'));
+
+    let ticket = await PromiseWifeBringingTicks;
+
+    let [popcorn, butter, colddrinks] = await Promise.all([getPopcorn,getButter,getColdDrinks])
+
+    console.log('${popcorn}, ${butter}, ${colddrinks}')
+    return ticket;
+}
+
+preMovie().then((m) => console.log('person3: shows ${m}'));
+
+console.log('person4: shows ticket');
+console.log('person5: shows ticket');
+
 const posts = [];
 let lastActivityTime = null;
 
-function createPost(title) {
+function delay(ms)
+{
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function createPost(title) {
+    await delay();
     return new Promise((resolve, reject) =>{
         setTimeout(() => {
             const post = { title: title };
@@ -11,7 +44,8 @@ function createPost(title) {
         });
 }
 
-function updateLastUserActivityTime() {
+async function updateLastUserActivityTime() {
+    await delay();
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             lastActivityTime = new Date();
@@ -19,7 +53,8 @@ function updateLastUserActivityTime() {
         }, 1000);
     });
 }
-function deleteLastPost() {
+async function deleteLastPost() {
+    await delay();
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             if(posts.length>0) {
@@ -47,3 +82,24 @@ createPost("Post 1")
     console.log("New Posts:", posts);
 })
 .catch((error) => console.log(error));
+
+// const posts = async () => {
+//     const lastActivityTimes = new Promise((resolve, reject) => {
+//         setTimeout(() => resolve('post'), 1000);
+//     });
+
+//     const createPost = new Promise((resolve, reject) => resolve('post'));
+
+//     const updateLastUserActivityTime = new Promise((resolve, reject) => resolve('lastActivityTime'));
+
+//     const deleteLastPost = new Promise((resolve, reject) => resolve('deletedPost'));
+
+//     let posted = await lastActivityTimes;
+
+//     let [post, lastActivityTime, deletedPost] = await Promise.all([createPost,updateLastUserActivityTime,deleteLastPost])
+
+//     console.log('${post}, ${lastActivityTime}, ${deletedPost}')
+//     return lastActivityTimes;
+// }
+
+// posts().then((m) => console.log('person: shows ${m}'));
