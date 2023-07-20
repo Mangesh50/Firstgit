@@ -8,7 +8,7 @@
   </head>
   <body>
     <section class="container">
-      <form id="form">
+      <form id="form" onsubmit="saveToLocalStorage(event)">
         <div>
           <label for="name">Name:</label>
           <input type="text" id="name">
@@ -32,8 +32,9 @@
         <li class="item">phone number</li> -->
       </ul>
     </section>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
     <script>
+      function saveToLocalStorage(event) {
       const form = document.getElementById("form");
       form.addEventListener("submit", function (event) {
         event.preventDefault();
@@ -49,16 +50,27 @@
     phoneNumber: phoneNumber,
   };
 
-  const newUsers = JSON.parse(localStorage.getItem("users")) || [];
+  //const newUsers = JSON.parse(localStorage.getItem("users")) || [];
 
-  newUsers.push(user);
+  //newUsers.push(user);
+  
+  axios.post("https://crudcrud.com/api/59b0d548d8ae4f299fe78c631a42df58/appointmentData", user)
+  .then((response) => {
+    showNewUserOnScreen(response.data)
+    console.log(response)
+  })
+  .catch((err) => {
+    //document.body.innerHTML = document.body.innerHTML + "<h4> Something went wrong </h4>"
+    console.log(err)
+  })
 
-  localStorage.setItem("users", JSON.stringify(newUsers));
+  //localStorage.setItem("users", JSON.stringify(newUsers));
 
   form.reset();
 
   displayUsers();
 });
+      }
 
 function deleteUser(index) {
   const users = JSON.parse(localStorage.getItem("users")) || [];
