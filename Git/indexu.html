@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title></title>
+</head>
+<body>
+  <section class="container">
+    <form id="form" onsubmit="saveToLocalStorage(event)">
+      <div>
+        <label for="name">Name:</label>
+        <input type="text" id="name">
+      </div>
+      <div>
+        <label for="emailId">Email:</label>
+        <input type="text" id="emailId">
+      </div>
+      <div>
+        <label for="phone_number">Phone Number:</label>
+        <input type="text" id="phone_number">
+      </div>
+      <input class="btn" type="submit" value="Submit">
+    </form>
+
+    <ul id="users"></ul>
+  </section>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+  <script>
+    function saveToLocalStorage(event) {
+      event.preventDefault();
+      const form = document.getElementById("form");
+      const name = document.getElementById("name").value;
+      const emailId = document.getElementById("emailId").value;
+      const phoneNumber = document.getElementById("phone_number").value;
+
+      // Create a new user
+      const user = {
+        name: name,
+        emailId: emailId,
+        phoneNumber: phoneNumber,
+      };
+
+      
+      
+      const newUsers = JSON.parse(localStorage.getItem("users")) || []; 
+      newUsers.push(user);
+      localStorage.setItem("users", JSON.stringify(newUsers));
+      
+
+      axios.post("https://crudcrud.com/api/6b121bd4194b40e79f1572b609ef1542/appointmentData", user)
+        .then((response) => {
+          showNewUserOnScreen(response.data);
+          console.log(response);
+        })
+        .catch((error) => {
+          //document.body.innerHTML = document.body.innerHTML + "<h4> Something went wrong </h4>";
+          console.log(error);
+        });
+
+      form.reset();
+    }
+
+    function deleteUserFromCrudCrud(userId) {
+      axios.delete("https://crudcrud.com/api/6b121bd4194b40e79f1572b609ef1542/appointmentData", userId)
+        .then((response) => {
+          console.log("User deleted successfully:", response);
+        })
+        .catch((error) => {
+          console.log("Error deleting user:", error);
+        });
+    }
+
+    function deleteUserFromLocalStorage(userId) {
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+      const updatedUsers = users.filter((user) => user._id !== userId);
+      localStorage.setItem("users", JSON.stringify(updatedUsers));
+    }
+    
+    function deleteUser(index, user) {
+      deleteUserFromCrudCrud(user._id);
+      deleteUserFromLocalStorage(user._id);
+
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+      users.splice(index, 1);
+      localStorage.setItem("users", JSON.stringify(users));
+      displayUsers();
+    }
+
+    function editUser(index) {
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+      const user = users[index];
+      // Set the form values to the user's information for editing
+      document.getElementById("name").value = user.name;
+      document.getElementById("emailId").value = user.emailId;
+      document.getElementById("phone_number").value = user.phoneNumber;
+      users.splice(index, 1);
+      localStorage.setItem("users", JSON.stringify(users));
+      displayUsers();
+    }
+
+    function displayUsers() {
+      const data = axios.get("https://crudcrud.com/api/6b121bd4194b40e79f1572b609ef1542/appointmentData")
+        .then((response) => {
+          const userList = document.getElementById("users");
+          userList.innerHTML = "";
+          //console.log(response);
+
+          for(var i=0; i<response.data.length; i++){
+            showNewUserOnScreen(response.data[i])
+            //console.log(response);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+        const users = JSON.parse(localStorage.getItem("users")) || [];
+        const userList = document.getElementById("users");
+        userList.innerHTML = "";
+        users.forEach((user, index) => {
+          const listItem = document.createElement("li");
+          listItem.textContent = `Name: ${user.name}, Email: ${user.emailId}, Phone Number: ${user.phoneNumber}`;
+          const editButton = document.createElement("button");
+          editButton.textContent = "Edit";
+          editButton.classList.add("btn", "btn-sm", "float-right", "mr-1");
+          editButton.addEventListener("click", function () {
+            editUser(index);
+          });
+
+          const deleteButton = document.createElement("button");
+          deleteButton.textContent = "Delete";
+          deleteButton.classList.add("btn", "btn-sm", "float-right");
+          deleteButton.addEventListener("click", function () {
+            deleteUser(index, user);
+          });
+          listItem.appendChild(editButton);
+          listItem.appendChild(deleteButton);
+          userList.appendChild(listItem);
+        });
+  }
+  
+  displayUsers();
+
+  function showNewUserOnScreen(user) {
+      const userList = document.getElementById("users");
+      const listItem = document.createElement("li");
+      listItem.textContent = `Name: ${user.name}, Email: ${user.emailId}, Phone Number: ${user.phoneNumber}`;
+
+      // Create a delete button for each user
+      const deleteButton = document.createElement("button");
+      deleteButton.textContent = "Delete";
+      deleteButton.classList.add("btn", "btn-sm", "float-right");
+      deleteButton.addEventListener("click", function () {
+        deleteUser(user._id, user);
+      });
+
+      listItem.appendChild(deleteButton);
+      userList.appendChild(listItem);
+    }
+  </script>
+</body>
+</html>
