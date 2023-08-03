@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Candy Shop</title>
+</head>
+
+<body>
+  <section class="container">
+    <form id="form" onsubmit="addItemToLocalStorage(event)">
+      <div>
+        <label for="candyName">Candy Name:</label>
+        <input type="text" id="candyName">
+
+        <label for="description">Description:</label>
+        <input type="text" id="description">
+
+        <label for="price">Price:</label>
+        <input type="text" id="price">
+
+        <label for="quantity">Quantity:</label>
+        <input type="text" id="quantity">
+
+      <input class="btn" type="submit" value="AddItem">
+    </div>
+    </form>
+
+    <ul id="items"></ul>
+  </section>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+  <script>
+    function addItemToLocalStorage(event) {
+      event.preventDefault();
+      const form = document.getElementById("form");
+      const candyName = document.getElementById("candyName").value;
+      const description = document.getElementById("description").value;
+      const price = document.getElementById("price").value;
+      const quantity = document.getElementById("quantity").value;
+
+      const item = {
+        candyName: candyName,
+        description: description,
+        price: price,
+        quantity: quantity,
+      };
+
+      function addItemToCrudCrud(item) {
+        axios.post("https://crudcrud.com/api/37b9801955664f3b84c93f14a6752122/candyShop", item)
+          .then((response) => {
+            showNewItemOnScreen(response.data);
+            console.log("Item added successfully:", response);
+          })
+          .catch((error) => {
+            console.log("Error adding item:", error);
+          });
+      }
+
+      const newItems = JSON.parse(localStorage.getItem("items")) || [];
+      newItems.push(item);
+      localStorage.setItem("items", JSON.stringify(newItems));
+      addItemToCrudCrud(item);
+
+      form.reset();
+      displayItems();
+    }
+
+    function displayItems() {
+      axios.get("https://crudcrud.com/api/37b9801955664f3b84c93f14a6752122/candyShop")
+        .then((response) => {
+          const itemsFromAPI = response.data;
+          const itemList = document.getElementById("items");
+          itemList.innerHTML = "";
+
+          itemsFromAPI.forEach((item) => {
+            showNewItemOnScreen(item);
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      const items = JSON.parse(localStorage.getItem("items")) || [];
+      const itemList = document.getElementById("items");
+      itemList.innerHTML = "";
+
+      items.forEach((item) => {
+        showNewItemOnScreen(item);
+      });
+    }
+
+    function showNewItemOnScreen(item) {
+      const itemList = document.getElementById("items");
+      const listItem = document.createElement("li");
+      listItem.textContent = `Candy Name: ${item.candyName}, Description: ${item.description}, Price: ${item.price}, Quantity: ${item.quantity}`;
+
+      const buy1Button = document.createElement("button");
+      buy1Button.textContent = "Buy1";
+      buy1Button.classList.add("btn", "btn-sm", "float-right", "buy-button");
+      buy1Button.addEventListener("click", function () {
+        decreaseQuantity(item, 1);
+      });
+
+      const buy2Button = document.createElement("button");
+      buy2Button.textContent = "Buy2";
+      buy2Button.classList.add("btn", "btn-sm", "float-right", "buy-button");
+      buy2Button.addEventListener("click", function () {
+        decreaseQuantity(item, 2);
+      });
+
+      const buy3Button = document.createElement("button");
+      buy3Button.textContent = "Buy3";
+      buy3Button.classList.add("btn", "btn-sm", "float-right", "buy-button");
+      buy3Button.addEventListener("click", function () {
+        decreaseQuantity(item, 3);
+      });
+
+      listItem.appendChild(buy1Button);
+      listItem.appendChild(buy2Button);
+      listItem.appendChild(buy3Button);
+      itemList.appendChild(listItem);
+    }
+
+    function decreaseQuantity(item, decrement) {
+      const items = JSON.parse(localStorage.getItem("items")) || [];
+      const updatedItems = items.map((i) =>
+        i.candyName === item.candyName && i.description === item.description ? { ...i, quantity: parseInt(i.quantity) - decrement } : i
+      );
+      localStorage.setItem("items", JSON.stringify(updatedItems));
+      displayItems();
+    }
+
+    displayItems();
+  </script>
+</body>
+
+</html>
